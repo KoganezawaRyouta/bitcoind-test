@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  bitcoind:
+    build:
+      context: .
+      dockerfile: ./containers/bitcoind/Dockerfile
+    environment:
+      BITCOIND_VERSION: v0.16.2
+    ports:
+      - "8332:8333"
+      - "18332:18333"
+    tty: true
+    stdin_open: true
+
