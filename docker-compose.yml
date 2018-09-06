@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
   bitcoind:
@@ -7,6 +7,8 @@ services:
       dockerfile: ./containers/bitcoind/Dockerfile
     environment:
       BITCOIND_VERSION: v0.16.2
+    mem_limit: 15gb
+    cpuset: 0,1,2,3
     ports:
       - "8332:8333"
       - "18332:18333"
