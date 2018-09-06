@@ -14,4 +14,3 @@ services:
       - "18332:18333"
     tty: true
     stdin_open: true
-
