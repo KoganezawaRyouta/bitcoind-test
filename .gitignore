@@ -1,3 +1,5 @@
 .DS_Store
 .idea/*
-containers/bitcoind/data
+containers/node/data
+containers/client/data
+.env

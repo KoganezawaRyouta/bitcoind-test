@@ -1,16 +1,58 @@
 version: '2'
 
 services:
-  bitcoind:
+  node:
     build:
       context: .
-      dockerfile: ./containers/bitcoind/Dockerfile
-    environment:
-      BITCOIND_VERSION: v0.16.2
+      dockerfile: ./containers/node/Dockerfile
+      args:
+        - RPC_USER=$RPC_USER
+        - RPC_AUTH=$RPC_AUTH
+        - RPC_PASSWORD=$RPC_PASSWORD
+        - BITCOIND_VERSION=$BITCOIND_VERSION
+        - RPC_BIND=$RPC_BIND
+        - RPC_ALLOWIP=$RPC_ALLOWIP
+    volumes:
+      - ./containers/node/data:/root/.bitcoin
     mem_limit: 15gb
-    cpuset: 0,1,2,3
     ports:
       - "8332:8333"
-      - "18332:18333"
-    tty: true
+      - "18332:18332"
     stdin_open: true
+    tty: true
+    networks:
+      bitcoind-net:
+        ipv4_address: $RPC_BIND
+
+  client:
+    build:
+      context: .
+      dockerfile: ./containers/client/Dockerfile
+      args:
+        - RPC_USER=$RPC_USER
+        - RPC_AUTH=$RPC_AUTH
+        - RPC_PASSWORD=$RPC_PASSWORD
+        - BITCOIND_VERSION=$BITCOIND_VERSION
+        - RPC_BIND=$RPC_BIND
+        - RPC_ALLOWIP=$RPC_ALLOWIP
+    volumes:
+      - ./containers/client/data:/root/.bitcoin
+    mem_limit: 10gb
+    links:
+      - node
+    ports:
+      - "3333:3333"
+    stdin_open: true
+    tty: true
+    networks:
+      bitcoind-net:
+        ipv4_address: $RPC_ALLOWIP
+
+networks:
+  bitcoind-net:
+    driver: bridge
+    ipam:
+     driver: default
+     config:
+       - subnet: 192.168.176.2/24
+         gateway: 192.168.176.1
