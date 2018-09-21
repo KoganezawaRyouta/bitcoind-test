@@ -4,7 +4,7 @@ services:
   node:
     build:
       context: .
-      dockerfile: ./containers/node/Dockerfile
+      dockerfile: ./containers/bitcoin/node/Dockerfile
       args:
         - RPC_USER=$RPC_USER
         - RPC_AUTH=$RPC_AUTH
@@ -13,7 +13,7 @@ services:
         - RPC_BIND=$RPC_BIND
         - RPC_ALLOWIP=$RPC_ALLOWIP
     volumes:
-      - ./containers/node/data:/root/.bitcoin
+      - ./containers/bitcoin/node/data:/root/.bitcoin
     mem_limit: 15gb
     ports:
       - "8332:8333"
@@ -27,7 +27,7 @@ services:
   client:
     build:
       context: .
-      dockerfile: ./containers/client/Dockerfile
+      dockerfile: ./containers/bitcoin/client/Dockerfile
       args:
         - RPC_USER=$RPC_USER
         - RPC_AUTH=$RPC_AUTH
@@ -36,7 +36,7 @@ services:
         - RPC_BIND=$RPC_BIND
         - RPC_ALLOWIP=$RPC_ALLOWIP
     volumes:
-      - ./containers/client/data:/root/.bitcoin
+      - ./containers/bitcoin/client/data:/root/.bitcoin
     mem_limit: 10gb
     links:
       - node
@@ -47,6 +47,47 @@ services:
     networks:
       bitcoind-net:
         ipv4_address: $RPC_ALLOWIP
+
+  grpc-base:
+    build:
+      context: .
+      dockerfile: ./containers/grpc/base/Dockerfile
+    working_dir: /go/src/github.com/KoganezawaRyouta/bitcoind-test
+    volumes:
+    - .:/go/src/github.com/KoganezawaRyouta/bitcoind-test
+
+  grpc-server:
+    extends: grpc-base
+    command: >-
+      sh -c "
+        reflex -s -r '\\.go$$' -R '^vendor/' -- sh -c 'make build && ./bin/grpc-bitcoin grpc_server'
+      "
+    stdin_open: true
+    tty: true
+    ports:
+      - "2222:2222"
+
+  grpc-client-list:
+    extends: grpc-base
+    command: >-
+      sh -c "
+        reflex -s -r '\\.go$$' -R '^vendor/' -- sh -c 'make build && ./bin/grpc-bitcoin grpc_client_list'
+      "
+    stdin_open: true
+    tty: true
+    links:
+      - grpc-server
+
+  grpc-client-add:
+    extends: grpc-base
+    command: >-
+      sh -c "
+        reflex -s -r '\\.go$$' -R '^vendor/' -- sh -c 'make build && ./bin/grpc-bitcoin grpc_client_add'
+      "
+    stdin_open: true
+    tty: true
+    links:
+    - grpc-server
 
 networks:
   bitcoind-net:

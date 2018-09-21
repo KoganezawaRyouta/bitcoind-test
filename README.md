@@ -13,15 +13,12 @@ Containers build!
 dcc build
 ```
 
+Execute bitcoind server 
 ```
 dcc up -d node
 ```
 
-```
-dcc up client
-```
-
-RPC access
+Execute rpc client
 ```
 dcc run --rm client bitcoin-cli <cmd>
 ```
