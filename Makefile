@@ -20,7 +20,7 @@ $(TMPDIR):
 	$(MKDIR_P) $@
 
 $(BINARY): $(BINDIR)
-	@go build -o $@ ./cli
+	@go build -o $@ ./app/cli
 
 .PHONY: setup
 ## install development packages
@@ -43,8 +43,11 @@ setup: $(TMPDIR)
 	@if [ -z `which godotenv 2> /dev/null` ]; then \
 		go get github.com/joho/godotenv; \
 		fi
+	@if [ -z `which protoc-gen-go 2> /dev/null` ]; then \
+		go get github.com/golang/protobuf/protoc-gen-go; \
+		fi
 
-.PHONY: dep
+.PHONY: de
 ## install dependencies packages
 dep: setup
 	dep ensure

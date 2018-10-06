@@ -4,8 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/KoganezawaRyouta/bitcoind-test/stream/client"
-
+	"github.com/KoganezawaRyouta/bitcoind-test/app/interfaces"
 	ps "github.com/mitchellh/go-ps"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +29,7 @@ var clientListCmd = &cobra.Command{
 			if pp != nil {
 				log.Printf(" Parent process name : %s\n", pp.Executable())
 			}
-			errsCh <- client.NewList()
+			errsCh <- interfaces.NewList()
 		}()
 		log.Fatal("terminated", <-errsCh)
 	},
@@ -56,7 +55,7 @@ var clientAddCmd = &cobra.Command{
 			if pp != nil {
 				log.Printf(" Parent process name : %s\n", pp.Executable())
 			}
-			errsCh <- client.NewAdd()
+			errsCh <- interfaces.NewAdd()
 		}()
 		log.Fatal("terminated", <-errsCh)
 	},

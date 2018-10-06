@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/KoganezawaRyouta/bitcoind-test/config"
+	"github.com/KoganezawaRyouta/bitcoind-test/app/config"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )

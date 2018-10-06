@@ -4,8 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/KoganezawaRyouta/bitcoind-test/stream/server"
-
+	"github.com/KoganezawaRyouta/bitcoind-test/app/interfaces"
 	ps "github.com/mitchellh/go-ps"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +29,7 @@ var serverCmd = &cobra.Command{
 			if pp != nil {
 				log.Printf(" Parent process name : %s\n", pp.Executable())
 			}
-			errsCh <- server.NewServer()
+			errsCh <- interfaces.NewServer()
 		}()
 		log.Fatal("terminated", <-errsCh)
 	},

@@ -1,4 +1,4 @@
-package server
+package interfaces
 
 import (
 	"log"
@@ -11,7 +11,7 @@ import (
 
 	"fmt"
 
-	pb "github.com/KoganezawaRyouta/bitcoind-test/stream/pb"
+	pb "github.com/KoganezawaRyouta/bitcoind-test/app/pb"
 )
 
 type customerService struct {

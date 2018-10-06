@@ -4,3 +4,5 @@ containers/bitcoin/node/data
 containers/bitcoin/client/data
 .env
 vendor/*
+tmp/*
+bin/*

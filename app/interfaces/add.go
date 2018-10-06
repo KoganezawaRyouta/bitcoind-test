@@ -1,10 +1,10 @@
-package client
+package interfaces
 
 import (
 	"context"
 	"log"
 
-	pb "github.com/KoganezawaRyouta/bitcoind-test/stream/pb"
+	pb "github.com/KoganezawaRyouta/bitcoind-test/app/pb"
 	"google.golang.org/grpc"
 )
 
@@ -17,7 +17,7 @@ import (
 //)
 
 func add(name string, age int) error {
-	conn, err := grpc.Dial("grpc-server:2222", grpc.WithInsecure())
+	conn, err := grpc.Dial("app-server:2222", grpc.WithInsecure())
 	if err != nil {
 		return err
 	}

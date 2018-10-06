@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  node:
+  bit-node:
     build:
       context: .
       dockerfile: ./containers/bitcoin/node/Dockerfile
@@ -24,7 +24,7 @@ services:
       bitcoind-net:
         ipv4_address: $RPC_BIND
 
-  client:
+  bit-client:
     build:
       context: .
       dockerfile: ./containers/bitcoin/client/Dockerfile
@@ -39,55 +39,80 @@ services:
       - ./containers/bitcoin/client/data:/root/.bitcoin
     mem_limit: 10gb
     links:
-      - node
+      - bit-node
     ports:
       - "3333:3333"
     stdin_open: true
     tty: true
     networks:
       bitcoind-net:
-        ipv4_address: $RPC_ALLOWIP
+        ipv4_address: $IP_FOR_BITCOIN_CLIENT
 
-  grpc-base:
+  app-base:
     build:
       context: .
-      dockerfile: ./containers/grpc/base/Dockerfile
+      dockerfile: containers/app/base/Dockerfile
     working_dir: /go/src/github.com/KoganezawaRyouta/bitcoind-test
     volumes:
-    - .:/go/src/github.com/KoganezawaRyouta/bitcoind-test
+      - .:/go/src/github.com/KoganezawaRyouta/bitcoind-test
 
-  grpc-server:
-    extends: grpc-base
+#  grpc-server:
+#    extends: app-base
+#    command: >-
+#      sh -c "
+#        reflex -s -r '\\.go$$' -R '^vendor/' -- sh -c 'make build && ./bin/grpc-bitcoin grpc_server'
+#      "
+#    stdin_open: true
+#    tty: true
+#    ports:
+#      - "2222:2222"
+#
+#  grpc-client:
+#    extends: app-base
+#    command: >-
+#      sh -c "
+#        reflex -s -r '\\.go$$' -R '^vendor/' -- sh -c 'make build && ./bin/grpc-bitcoin grpc_client_list'
+#      "
+#    stdin_open: true
+#    tty: true
+#    links:
+#      - grpc-server
+
+  nuts-sub:
+    extends: app-base
     command: >-
       sh -c "
-        reflex -s -r '\\.go$$' -R '^vendor/' -- sh -c 'make build && ./bin/grpc-bitcoin grpc_server'
+        reflex -s -r '\\.go$$' -R '^vendor/' -- sh -c 'make build && ./bin/grpc-bitcoin subscriber'
       "
     stdin_open: true
     tty: true
+    links:
+      - nuts-server
+
+  nuts-pub:
+    extends: app-base
+    command: >-
+      sh -c "
+        reflex -s -r '\\.go$$' -R '^vendor/' -- sh -c 'make build && ./bin/grpc-bitcoin publisher'
+      "
+    stdin_open: true
+    tty: true
+    links:
+      - nuts-server
+    networks:
+      bitcoind-net:
+        ipv4_address: $IP_FOR_NUTS_PUB
+
+  nuts-server:
+    extends: app-base
+    command: gnatsd -D -V -a $IP_FOR_NUTS_SERVER -p $PORT_FOR_NUTS_SERVER
     ports:
-      - "2222:2222"
-
-  grpc-client-list:
-    extends: grpc-base
-    command: >-
-      sh -c "
-        reflex -s -r '\\.go$$' -R '^vendor/' -- sh -c 'make build && ./bin/grpc-bitcoin grpc_client_list'
-      "
+      - "4222:4222"
     stdin_open: true
     tty: true
-    links:
-      - grpc-server
-
-  grpc-client-add:
-    extends: grpc-base
-    command: >-
-      sh -c "
-        reflex -s -r '\\.go$$' -R '^vendor/' -- sh -c 'make build && ./bin/grpc-bitcoin grpc_client_add'
-      "
-    stdin_open: true
-    tty: true
-    links:
-    - grpc-server
+    networks:
+      bitcoind-net:
+        ipv4_address: $IP_FOR_NUTS_SERVER
 
 networks:
   bitcoind-net:

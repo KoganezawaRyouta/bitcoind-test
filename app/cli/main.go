@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/KoganezawaRyouta/bitcoind-test/cli/cmd"
+	"github.com/KoganezawaRyouta/bitcoind-test/app/cli/cmd"
 )
 
 func main() {

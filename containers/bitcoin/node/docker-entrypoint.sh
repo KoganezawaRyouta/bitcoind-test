@@ -14,6 +14,7 @@ rpcauth=${RPC_AUTH}
 rpcport=18332
 rpcbind=${RPC_BIND}
 rpcallowip=${RPC_ALLOWIP}
+disablewallet=0
 datadir=${BITCOIN_ROOT}/.bitcoin
 listen=1
 EOF

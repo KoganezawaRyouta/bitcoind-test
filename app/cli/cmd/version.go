@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/KoganezawaRyouta/bitcoind-test/config"
+	"github.com/KoganezawaRyouta/bitcoind-test/app/config"
 )
 
 var versionCmd = &cobra.Command{
