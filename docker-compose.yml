@@ -48,6 +48,13 @@ services:
       bitcoind-net:
         ipv4_address: $IP_FOR_BITCOIN_CLIENT
 
+  lnd:
+    build:
+      context: .
+      dockerfile: ./containers/bitcoin/lnd/Dockerfile
+    stdin_open: true
+    tty: true
+
   app-base:
     build:
       context: .

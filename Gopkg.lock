@@ -26,12 +26,13 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:d0a31b77988b04afbfa2c5ee38567a7a35d5a95de2266a644a7bc8d5c898e68d"
+  digest = "1:5be1c66caeb03381e4e7322eddfc0b06b26991ddba3ad39e009ccf67c20dfb18"
   name = "github.com/btcsuite/btcutil"
   packages = [
     ".",
     "base58",
     "bech32",
+    "hdkeychain",
   ]
   pruneopts = "UT"
   revision = "ab6388e0c60ae4834a1f57511e20c17b5f78be4b"
@@ -228,7 +229,10 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/btcsuite/btcd/chaincfg",
     "github.com/btcsuite/btcd/rpcclient",
+    "github.com/btcsuite/btcutil",
+    "github.com/btcsuite/btcutil/hdkeychain",
     "github.com/golang/protobuf/proto",
     "github.com/joho/godotenv",
     "github.com/mitchellh/go-ps",

@@ -8,8 +8,10 @@ import (
 )
 
 func NewClient() *rpcclient.Client {
+	log.Printf(" RPC_USER : %v\n", os.Getenv("RPC_USER"))
+	log.Printf(" RPC_PASSWORD : %v\n", os.Getenv("RPC_PASSWORD"))
 	connCfg := &rpcclient.ConnConfig{
-		Host:         os.Getenv("RPC_BIND") + ":18332",
+		Host:         "127.0.0.1:18332",
 		User:         os.Getenv("RPC_USER"),
 		Pass:         os.Getenv("RPC_PASSWORD"),
 		HTTPPostMode: true, // Bitcoin core only supports HTTP POST mode

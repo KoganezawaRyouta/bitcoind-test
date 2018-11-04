@@ -30,4 +30,4 @@ RUN set -x && \
 COPY ./containers/bitcoin/node/docker-entrypoint.sh ${BITCOIN_ROOT}/bitcoin/
 RUN mkdir -p ${BITCOIN_ROOT}/.bitcoin
 ENTRYPOINT ["./docker-entrypoint.sh"]
-CMD ["bitcoind"]
+CMD ["bitcoind", "-reindex-chainstate"]
